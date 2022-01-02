@@ -8,3 +8,54 @@ body {
 a {
   color: #00B7FF;
 }
+
+.left{
+  position: relative;
+  top: 0;
+  float: left;
+}
+
+.right{
+  position: relative;
+  top: 0;
+  float: right;
+}
+
+.clear_float{
+  clear: both;
+}
+.task_container{
+  display: flex;
+  align-items: center;
+  float: top;
+  clear: top;
+}
+.task_list{
+}
+.task_text{
+  min-width: 50vw;
+  background-color: black;
+  color:white;
+}
+.username_block{
+
+}
+.password_block{
+
+}
+.form_control{
+  background-color: black;
+  color: white;
+}
+.label{
+  display: block;
+  width: 100px;
+}
+.login_button{
+  background-color: black;
+  color: white;
+  margin: 30px 20px;
+}
+.login_block{
+  float:left;
+}

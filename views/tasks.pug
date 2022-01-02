@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    div.task_list
+        each task, index in tasks
+            div.task_container(class=['task'], id=index)
+                p.task_text(contenteditable='true', class="text")=task.text
+                if task.done
+                    span.material-icons(class=['right',"changeState"]) unpublished
+                else
+                    span.material-icons(class=['right',"changeState"]) done
+                span.material-icons(class=['right',"delete"]) delete_forever
+                div.clear_float
+        div.task_container
+            p.task_text(contenteditable='true', id="newText")="New task"
+            span.material-icons(class=['right'],id="add") add
