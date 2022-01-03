@@ -59,3 +59,20 @@ a {
 .login_block{
   float:left;
 }
+.tasks_dropdown{
+  background-color: black;
+  color: white;
+}
+
+div.done p{
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: darkgrey;
+}
+
+.shown{
+
+}
+.hidden{
+  display: none;
+}

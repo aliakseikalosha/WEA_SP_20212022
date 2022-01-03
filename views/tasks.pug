@@ -1,11 +1,23 @@
 extends layout
 
 block content
+    div
+        span Select task to show :
+        select(name='selectTask', placeholder="all", id="selectData", class='tasks_dropdown')
+            option(value='all') all
+            option(value='done') done
+            option(value='not_done') not done
     div.task_list
         each task in tasks
-            div.task_container(class=['task'], id=task.task_id)
+            - var done = task.task_state == 1;
+            - var divClasses = ['task_container','task']
+            if done
+               - divClasses.push('done')
+            else
+                - divClasses.push('not_done')
+            div(class=divClasses, id=task.task_id)
                 p.task_text(contenteditable='true', class="text")=task.task_text
-                if task.task_state
+                if done
                     span.material-icons(class=['right',"changeState"]) unpublished
                 else
                     span.material-icons(class=['right',"changeState"]) done

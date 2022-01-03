@@ -12,7 +12,7 @@ router.get('/',  async function (req, res, next) {
     res.render('tasks', {titles:"Your tasks", scriptPath:"/javascripts/tasksController.js",tasks: await db.getAllTasks(req.cookies.token)});
 });
 
-router.post('/api', async function (req, res, next) {
+router.get('/api', async function (req, res, next) {
     if(req.query.username && req.query.password){
         let user = await db.getUser(req.query.username, req.query.password);
         if(user){

@@ -2,6 +2,7 @@ window.onload = function () {
     const tasks = document.getElementsByClassName("task");
     const newTaskText = document.getElementById("newText");
     const newTaskButton = document.getElementById("add");
+    const selectVisibleTask = document.getElementById("selectData");
     //NEW TASK
     //NEW TASK TEXT
     let showDefaultText = true;
@@ -11,12 +12,13 @@ window.onload = function () {
             showDefaultText = false;
         }
     }, false);
+
     newTaskText.addEventListener("input", function () {
         console.log(this.textContent);
     }, false);
-    //NEW TASK BUTTON
+//NEW TASK BUTTON
     newTaskButton.addEventListener('click', taskAdd, false);
-    //END NEW TASK
+//END NEW TASK
     for (let i = 0; i < tasks.length; i++) {
         for (let child of tasks[i].childNodes) {
             if (child.classList.contains('text')) {
@@ -28,6 +30,28 @@ window.onload = function () {
             if (child.classList.contains('delete')) {
                 child.addEventListener('click', () => taskDelete(tasks[i].id), false)
             }
+        }
+    }
+    updateTaskVisibility();
+    selectVisibleTask.addEventListener('change', updateTaskVisibility);
+
+    function updateTaskVisibility() {
+        let value = selectVisibleTask.value;
+        if (value === "all") {
+            setTaskVisible((classes) => {
+                return true;
+            })
+        } else {
+            setTaskVisible((classes) => {
+                return classes.contains(value);
+            })
+        }
+    }
+
+    function setTaskVisible(isTaskVisible) {
+        for (let i = 0; i < tasks.length; i++) {
+            tasks[i].classList.remove('hidden', 'shown');
+            tasks[i].classList.add((isTaskVisible(tasks[i].classList) ? 'shown' : 'hidden'));
         }
     }
 
@@ -80,4 +104,5 @@ window.onload = function () {
             });
         }
     }
-};
+}
+;
