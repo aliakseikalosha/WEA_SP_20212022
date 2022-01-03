@@ -10,13 +10,9 @@ function checkNameForBannedChars(name){
     return true;
 }
 
-function getUser(name, password) {
-    return db.getUser(name, password);
-}
-
 async function hasUser(name, password) {
     if(checkNameForBannedChars(name)){
-        let user = await db.getUser(name,password);
+        let user = await db.getUser(name, password);
         if(user){
             return true;
         }

@@ -33,8 +33,8 @@ function initDB() {
             `).run(`
                 INSERT INTO users(username, password)
                 VALUES ('test', 'test'),
-                       ('test1', 'test1'),
-                       ('test2', 'test2');
+                       ('test.one', 'test1'),
+                       ('test.two', 'test2');
             `).run(
                 `
                     CREATE TABLE IF NOT EXISTS tasks
