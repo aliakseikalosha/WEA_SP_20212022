@@ -22,6 +22,10 @@ async function hasUser(name, password) {
 
 /* GET tasks page. */
 router.get('/', function (req, res, next) {
+    if(req.cookies.authorized){
+        res.redirect('/tasks');
+        return;
+    }
     res.render('login', {titles:"Login", scriptPath:"/javascripts/loginController.js"});
 });
 
