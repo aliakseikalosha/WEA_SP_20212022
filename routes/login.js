@@ -37,6 +37,7 @@ router.post('/',async function (req, res, next) {
             secure: true,
             httpOnly: true,
             expires: dayjs().add(1, "days").toDate(),
+            sameSite: 'strict',
         };
         res.cookie('token', token,options).cookie('authorized', 'true',options).redirect("/tasks");
     }
