@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
+const {validateToken} = require("../database");
 
 
 /* GET tasks page. */
 router.get('/',  async function (req, res, next) {
-    if(!req.cookies.authorized){
-        res.redirect("/login");
-        return;
+    if(req.cookies.authorized){
+        if(await validateToken(req.cookies.token)){
+            res.render('tasks', {titles:"Your tasks", scriptPath:"/javascripts/tasksController.js",tasks: await db.getAllTasks(req.cookies.token)});
+            return;
+        }
     }
-    res.render('tasks', {titles:"Your tasks", scriptPath:"/javascripts/tasksController.js",tasks: await db.getAllTasks(req.cookies.token)});
+    res.clearCookie('authorized').clearCookie('token').redirect("/login");
 });
 
 router.get('/api', async function (req, res, next) {
@@ -25,8 +28,8 @@ router.get('/api', async function (req, res, next) {
 
 router.post('/',async function (req, res, next) {
     console.log(req.body)
-    if(!req.cookies.authorized){
-        res.redirect("/login");
+    if(!(req.cookies.authorized && await validateToken(req.cookies.token))){
+        res.clearCookie('authorized').clearCookie('token').redirect("/login");
         return;
     }
     if(req.body.task === "add"){

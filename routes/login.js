@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
-const bandCharsInUsernameRegex =  /([^a-zA-Z\S\.]|[0-9])/gm
+const dayjs = require('dayjs');
+const bandCharsInUsernameRegex =  /([^a-zA-Z\S\.]|[0-9])/gm;
 
 function checkNameForBannedChars(name){
     if(name.match(bandCharsInUsernameRegex)){
@@ -32,7 +33,12 @@ router.get('/', function (req, res, next) {
 router.post('/',async function (req, res, next) {
     if(await hasUser(req.body.username, req.body.password)){
         let token =  await db.updateToken(req.body.username);
-        res.cookie('token', token).cookie('authorized', 'true').redirect("/tasks");
+        let options = {
+            secure: true,
+            httpOnly: true,
+            expires: dayjs().add(1, "days").toDate(),
+        };
+        res.cookie('token', token,options).cookie('authorized', 'true',options).redirect("/tasks");
     }
     console.log(req.body);
     res.render('login', {titles:"Login", scriptPath:"/javascripts/loginController.js"});

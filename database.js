@@ -65,6 +65,14 @@ async function getUser(username, password) {
     return user.length === 1 ? user[0] : null;
 }
 
+async function validateToken(token){
+    let user = await getUserByToken(token);
+    if(user){
+        return true;
+    }
+    return false;
+}
+
 async function getUserByToken(token) {
     const sql = `
         SELECT *
@@ -196,4 +204,4 @@ function all(sql, params = []) {
 }
 
 
-module.exports = {initDB, addNewTask, updateTask, deleteTask, getAllTasks, getUser, updateToken};
+module.exports = {initDB, addNewTask, updateTask, deleteTask, getAllTasks, getUser, updateToken, validateToken};
