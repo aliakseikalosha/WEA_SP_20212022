@@ -18,15 +18,15 @@ window.onload = function () {
     newTaskButton.addEventListener('click', taskAdd, false);
     //END NEW TASK
     for (let i = 0; i < tasks.length; i++) {
-        for (const child of tasks[i].childNodes) {
+        for (let child of tasks[i].childNodes) {
             if (child.classList.contains('text')) {
-                child.addEventListener("input", () => taskTextUpdate(i, this.textContent), false);
+                child.addEventListener("focusout", () => taskTextUpdate(tasks[i].id, child.textContent), false);
             }
             if (child.classList.contains('changeState')) {
-                child.addEventListener('click', () => taskChangeStatus(i), false)
+                child.addEventListener('click', () => taskChangeStatus(tasks[i].id), false)
             }
             if (child.classList.contains('delete')) {
-                child.addEventListener('click', () => taskDelete(i), false)
+                child.addEventListener('click', () => taskDelete(tasks[i].id), false)
             }
         }
     }

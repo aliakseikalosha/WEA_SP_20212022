@@ -1,25 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../database');
 
-function getTasks(req) {
-    let tasks = [];
-    for (let i = 0; i < 2 + Math.random() * 10; i++) {
-        tasks.push({
-            text: "bla bla",
-            id:i,
-            done: false,
-        });
-    }
-    return tasks
-}
 
 /* GET tasks page. */
-router.get('/', function (req, res, next) {
-    res.render('tasks', {titles:"Your tasks", scriptPath:"/javascripts/tasksController.js",tasks:getTasks(req)});
+router.get('/',  async function (req, res, next) {
+    if(!req.cookies.authorized){
+        res.redirect("/login");
+        return;
+    }
+    res.render('tasks', {titles:"Your tasks", scriptPath:"/javascripts/tasksController.js",tasks: await db.getAllTasks(req.cookies.token)});
 });
 
-router.post('/',function (req, res, next) {
+router.post('/',async function (req, res, next) {
     console.log(req.body)
+    if(!req.cookies.authorized){
+        res.redirect("/login");
+        return;
+    }
+    if(req.body.task === "add"){
+         await db.addNewTask(req.cookies.token, req.body.text);
+    }
+    if(req.body.task === "updateText" && parseInt(req.body.id)){
+        await db.updateTask(req.cookies.token, parseInt(req.body.id), req.body.text,false);
+    }
+    if(req.body.task === "updateStatus" && parseInt(req.body.id)){
+        await db.updateTask(req.cookies.token, parseInt(req.body.id), null, true);
+    }
+    if(req.body.task === "delete" && parseInt(req.body.id)){
+        await db.deleteTask(req.cookies.token, parseInt(req.body.id));
+    }
     res.end("OK");
 });
 

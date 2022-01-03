@@ -2,10 +2,10 @@ extends layout
 
 block content
     div.task_list
-        each task, index in tasks
-            div.task_container(class=['task'], id=index)
-                p.task_text(contenteditable='true', class="text")=task.text
-                if task.done
+        each task in tasks
+            div.task_container(class=['task'], id=task.task_id)
+                p.task_text(contenteditable='true', class="text")=task.task_text
+                if task.task_state
                     span.material-icons(class=['right',"changeState"]) unpublished
                 else
                     span.material-icons(class=['right',"changeState"]) done
