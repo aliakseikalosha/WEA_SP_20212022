@@ -6,7 +6,9 @@ const db = new sqlite3.Database('./database.db', (err) => {
         console.log('Connected to the database.');
     }
 )
-
+/**
+ * Init database if there are no tables in it
+ */
 function initDB() {
     let hasUsers = false;
     all(`SELECT name
@@ -53,7 +55,12 @@ function initDB() {
         });
     });
 }
-
+/**
+ * Get user by
+ * @param username
+ * @param password
+ * @returns {Promise<*|null>} user or null if unique user not found
+ */
 async function getUser(username, password) {
     const sql = `
         SELECT *
@@ -64,7 +71,11 @@ async function getUser(username, password) {
     let user = await all(sql, [username, password]);
     return user.length === 1 ? user[0] : null;
 }
-
+/**
+ * Validate if token is in database
+ * @param token user token
+ * @returns {Promise<boolean>} return true if in database
+ */
 async function validateToken(token){
     let user = await getUserByToken(token);
     if(user){
@@ -72,7 +83,11 @@ async function validateToken(token){
     }
     return false;
 }
-
+/**
+ * Get user by
+ * @param token user token
+ * @returns {Promise<*|null>} return user or null if no uniqe user found
+ */
 async function getUserByToken(token) {
     const sql = `
         SELECT *
@@ -83,8 +98,16 @@ async function getUserByToken(token) {
     return user.length === 1 ? user[0] : null;
 }
 
+/**
+ * Gives a random token for a user
+ * @param username to set token to
+ * @returns {Promise<string>} token set to user
+ */
 async function updateToken(username) {
-    //https://learnersbucket.com/examples/javascript/unique-id-generator-in-javascript/
+    /*
+    guid calculation are from
+    https://learnersbucket.com/examples/javascript/unique-id-generator-in-javascript/
+     */
     const guid = () => {
         let s4 = () => {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -104,17 +127,33 @@ async function updateToken(username) {
     return token;
 }
 
+/**
+ *  Add new task to the user
+ * @param token of user to add task to
+ * @param taskText text of added task
+ * @returns {Promise<void>}
+ */
 async function addNewTask(token, taskText) {
     let user = await getUserByToken(token);
-    const sql = `
+    if(user){
+        const sql = `
         INSERT INTO tasks(username, task_text, task_state)
         VALUES ((?), (?), 0)
     `
-    let res = await run(sql, [user.username, taskText]);
-    console.log("addNewTask", res);
+        let res = await run(sql, [user.username, taskText]);
+        console.log("addNewTask", res);
+    }
 }
 
 
+/**
+ * Update existing task
+ * @param token of user that owns task
+ * @param taskId of task to update
+ * @param taskText set to null if don't need to update
+ * @param taskState set to false if no need of update
+ * @returns {Promise<void>}
+ */
 async function updateTask(token, taskId, taskText, taskState) {
     let task = await getTask(token, taskId);
     if(!task){
@@ -139,6 +178,12 @@ async function updateTask(token, taskId, taskText, taskState) {
     console.log("updateTask", res);
 }
 
+/**
+ * Delete task by id
+ * @param token of user that owns task
+ * @param taskId of task to delete
+ * @returns {Promise<void>}
+ */
 async function deleteTask(token, taskId) {
     let task = await getTask(token, taskId);
     if(!task){
@@ -152,6 +197,12 @@ async function deleteTask(token, taskId) {
     console.log("deleteTask", res);
 }
 
+/**
+ * get task
+ * @param token of user that owns task
+ * @param taskId of task you are looking for
+ * @returns {Promise<*|null>} task or a null in none found
+ */
 async function getTask(token, taskId) {
     let sql = `
         SELECT *
@@ -164,6 +215,11 @@ async function getTask(token, taskId) {
     return res.length === 1 ? res[0] : null;
 }
 
+/**
+ * Return all task of the user
+ * @param token of user that owns task
+ * @returns {Promise<unknown>} array of the task owned by user
+ */
 async function getAllTasks(token) {
     let sql = `
         SELECT *
@@ -174,7 +230,12 @@ async function getAllTasks(token) {
     console.log(res);
     return res;
 }
-
+/**
+ * Add promise to sqlite3 run function
+ * @param sql request
+ * @param params inserted in request
+ * @returns {Promise<unknown>} result of the running the request
+ */
 function run(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.run(sql, params, function (err) {
@@ -188,7 +249,12 @@ function run(sql, params = []) {
         });
     });
 }
-
+/**
+ * Add promise to sqlite3 all function
+ * @param sql request
+ * @param params inserted in request
+ * @returns {Promise<unknown>} result of the running the request
+ */
 function all(sql, params = []) {
     return new Promise((resolve, reject) => {
         db.all(sql, params, (err, rows) => {
