@@ -13,9 +13,11 @@ function checkNameForBannedChars(name){
 
 async function hasUser(name, password) {
     if(checkNameForBannedChars(name)){
-        let user = await db.getUser(name, password);
-        if(user){
-            return true;
+        if(password.length>3){
+            let user = await db.getUser(name, password);
+            if(user){
+                return true;
+            }
         }
     }
     return false;

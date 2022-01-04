@@ -1,14 +1,16 @@
 extends layout
 block content
     div
-        form(class="form-signin" method="POST" action="/login")
+        form(class="form-signin" method="POST" action="/login" id="login")
             div.login_block
                 div.username_block
-                    label(for="inputUsername", class="label") Username
-                    input(type="text" name="username" id="inputUsername" class="form_control" placeholder="Username" required autofocus)
+                    div
+                        label(for="inputUsername", class="label") Username
+                        input(type="text" name="username" id="inputUsername" class="form_control" placeholder="Username" required autofocus)
                     span(id="usernameError", class="error")
                 div.password_block
-                    label(for="inputPassword", class="label") Password
-                    input(type="password" name="password" id="inputPassword" class="form_control" placeholder="Password" required)
+                    div
+                        label(for="inputPassword", class="label") Password
+                        input(type="password" name="password" id="inputPassword" class="form_control" placeholder="Password" required)
                     span(id="passwordError", class="error")
-            button(type="submit" class="material-icons login_button" id="login_button" ) login
+            button(type="submit" class="material-icons login_button" id="loginButton" ) login

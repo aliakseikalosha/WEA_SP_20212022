@@ -38,10 +38,10 @@ a {
   color:white;
 }
 .username_block{
-
+  margin: 10px 10px;
 }
 .password_block{
-
+  margin: 10px 10px;
 }
 .form_control{
   background-color: black;
@@ -52,9 +52,11 @@ a {
   width: 100px;
 }
 .login_button{
+  float: left;
+  clear: both;
   background-color: black;
   color: white;
-  margin: 30px 20px;
+  margin: 20px 10px;
 }
 .login_block{
   float:left;
@@ -75,4 +77,9 @@ div.done p{
 }
 .hidden{
   display: none;
+}
+
+.error{
+  color: darkred;
+  text-decoration: underline;
 }
